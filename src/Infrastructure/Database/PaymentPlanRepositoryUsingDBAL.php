@@ -51,7 +51,8 @@ final class PaymentPlanRepositoryUsingDBAL implements PaymentPlanRepository
             ->setParameter(':id', $record['id'])
             ->execute()
             ->fetchOne();
-        $recordWithIdExists = (0 !== $recordsWithIdCount);
+
+        $recordWithIdExists = (0 !== (int)$recordsWithIdCount);
 
         if (!$recordWithIdExists) {
             $this->connection->insert(self::MODEL_TABLE, $record);
