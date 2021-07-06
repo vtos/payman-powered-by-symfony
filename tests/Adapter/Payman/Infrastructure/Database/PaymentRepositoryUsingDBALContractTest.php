@@ -91,6 +91,31 @@ final class PaymentRepositoryUsingDBALContractTest extends KernelTestCase
             ),
             $paymentPlan
         );
+
+        // And then update it.
+        $paymentPlan = new PaymentPlan(
+            $paymentPlanId,
+            'Payment Plan 2',
+            PaymentPlanType::fromInt(PaymentPlanType::FOREIGNERS)
+        );
+        $repository->store($paymentPlan);
+
+        $paymentPlanRecord = $connection->createQueryBuilder()
+            ->select('*')
+            ->from('payment_plans')
+            ->where('id = :id')
+            ->setParameter(':id', $paymentPlanId->asString())
+            ->execute()
+            ->fetchAssociative();
+
+        $this->assertEquals(
+            new PaymentPlan(
+                PaymentPlanId::fromString($paymentPlanRecord['id']),
+                $paymentPlanRecord['name'],
+                PaymentPlanType::fromInt((int)$paymentPlanRecord['type'])
+            ),
+            $paymentPlan
+        );
     }
 
     /**
