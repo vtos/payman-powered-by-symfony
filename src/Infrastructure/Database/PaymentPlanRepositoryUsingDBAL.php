@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Payman\Infrastructure\Database;
 
+use Exception;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DoctrineDBALException;
 use Doctrine\DBAL\Driver\Exception as DoctrineDBALDriverException;
@@ -69,9 +70,17 @@ final class PaymentPlanRepositoryUsingDBAL implements PaymentPlanRepository
         );
     }
 
+    /**
+     * @throws DoctrineDBALException
+     */
     public function remove(PaymentPlanId $id): void
     {
-        // TODO: Implement remove() method.
+        $this->connection->delete(
+            self::MODEL_TABLE,
+            [
+                'id' => $id->asString(),
+            ]
+        );
     }
 
     /**
@@ -80,34 +89,44 @@ final class PaymentPlanRepositoryUsingDBAL implements PaymentPlanRepository
      */
     public function nextIdentity(): PaymentPlanId
     {
-        $sequence = $this->connection->createQueryBuilder()
-            ->select('seq')
-            ->from(self::IDENTITY_SEQUENCE_TABLE)
-            ->where('model = :model')
-            ->setParameter(':model', self::MODEL_NAME)
-            ->execute()
-            ->fetchOne();
-        if (false === $sequence) {
-            $this->connection->insert(
-                self::IDENTITY_SEQUENCE_TABLE,
-                [
-                    'model' => self::MODEL_NAME,
-                    'seq' => 2,
-                ]
-            );
+        $this->connection->beginTransaction();
 
-            return PaymentPlanId::fromString('1');
+        try {
+            $sequence = $this->connection->createQueryBuilder()
+                ->select('seq')
+                ->from(self::IDENTITY_SEQUENCE_TABLE)
+                ->where('model = :model')
+                ->setParameter(':model', self::MODEL_NAME)
+                ->execute()
+                ->fetchOne();
+            if (false === $sequence) {
+                $sequence = 1;
+
+                $this->connection->insert(
+                    self::IDENTITY_SEQUENCE_TABLE,
+                    [
+                        'model' => self::MODEL_NAME,
+                        'seq' => 2,
+                    ]
+                );
+            } else {
+                $this->connection->update(
+                    self::IDENTITY_SEQUENCE_TABLE,
+                    [
+                        'seq' => $sequence + 1,
+                    ],
+                    [
+                        'model' => self::MODEL_NAME,
+                    ]
+                );
+            }
+
+            $this->connection->commit();
+        } catch (Exception $exception) {
+            $this->connection->rollBack();
+
+            throw $exception;
         }
-
-        $this->connection->update(
-            self::IDENTITY_SEQUENCE_TABLE,
-            [
-                'seq' => $sequence + 1,
-            ],
-            [
-                'model' => self::MODEL_NAME,
-            ]
-        );
 
         return PaymentPlanId::fromString(
             (string)$sequence

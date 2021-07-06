@@ -92,4 +92,40 @@ final class PaymentRepositoryUsingDBALContractTest extends KernelTestCase
             $paymentPlan
         );
     }
+
+    /**
+     * @test
+     */
+    public function it_removes_payment_plan(): void
+    {
+        $container = self::getContainer();
+
+        $repository = $container->get(PaymentPlanRepositoryUsingDBAL::class);
+        $connection = $container->get(Connection::class);
+
+        $paymentPlanId = $repository->nextIdentity();
+
+        $paymentPlan = new PaymentPlan(
+            $paymentPlanId,
+            'Payment Plan 1',
+            PaymentPlanType::fromInt(PaymentPlanType::LOCALS)
+        );
+
+        $repository->store($paymentPlan);
+
+        $repository->remove($paymentPlanId);
+
+        $recordsWithIdCount = $connection->createQueryBuilder()
+            ->select('COUNT(*)')
+            ->from('payment_plans')
+            ->where('id = :id')
+            ->setParameter(':id', $paymentPlanId->asString())
+            ->execute()
+            ->fetchOne();
+
+        $this->assertEquals(
+            0,
+            (int)$recordsWithIdCount
+        );
+    }
 }
