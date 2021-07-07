@@ -30,11 +30,9 @@ final class CreatePaymentPlanHandler
 
     public function handle(CreatePaymentPlan $command): void
     {
-        $id = $this->repository->nextIdentity();
-
         $this->repository->store(
             new PaymentPlan(
-                PaymentPlanId::fromString($id),
+                $this->repository->nextIdentity(),
                 $command->name(),
                 PaymentPlanType::fromInt($command->type())
             )
