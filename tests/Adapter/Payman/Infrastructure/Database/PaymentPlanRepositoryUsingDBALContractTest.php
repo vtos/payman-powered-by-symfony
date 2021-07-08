@@ -22,7 +22,7 @@ use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
 use Payman\Infrastructure\Database\PaymentPlanRepositoryUsingDBAL;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-final class PaymentRepositoryUsingDBALContractTest extends KernelTestCase
+final class PaymentPlanRepositoryUsingDBALContractTest extends KernelTestCase
 {
     protected function setUp(): void
     {

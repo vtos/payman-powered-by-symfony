@@ -27,4 +27,12 @@ services:
     Payman\Infrastructure\Database\PaymentPlanRepositoryUsingDBAL:
         public: true
 
+    Payman\Infrastructure\Database\PaymentYearRepositoryUsingDBAL:
+        public: true
+
+    Payman\Infrastructure\Database\StudentRepositoryUsingDBAL:
+        public: true
+
     Payman\Domain\Model\PaymentPlan\PaymentPlanRepository: '@Payman\Infrastructure\Database\PaymentPlanRepositoryUsingDBAL'
+    Payman\Domain\Model\PaymentYear\PaymentYearRepository: '@Payman\Infrastructure\Database\PaymentYearRepositoryUsingDBAL'
+    Payman\Domain\Model\Student\StudentRepository: '@Payman\Infrastructure\Database\StudentRepositoryUsingDBAL'

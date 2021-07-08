@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Payman\Application\PaymentPlans;
 
 use Payman\Domain\Model\PaymentPlan\PaymentPlan;
-use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
+use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanRepository;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
 
@@ -33,7 +33,7 @@ final class CreatePaymentPlanHandler
         $this->repository->store(
             new PaymentPlan(
                 $this->repository->nextIdentity(),
-                $command->name(),
+                PaymentPlanName::fromString($command->name()),
                 PaymentPlanType::fromInt($command->type())
             )
         );
