@@ -26,7 +26,7 @@ final class PaymentPlansController extends AbstractController
     /**
      * @Route("/api/v1/plans", methods={"GET"}, name="api_payment_plans_list")
      */
-    public function list(Request $request): JsonResponse
+    public function list(): JsonResponse
     {
         // TODO: fetch list of payment plans.
         return new JsonResponse(
