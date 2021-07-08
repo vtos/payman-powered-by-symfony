@@ -14,33 +14,31 @@ declare(strict_types=1);
 
 namespace Payman\Domain\Model\PaymentPlan;
 
-use InvalidArgumentException;
-
 final class PaymentPlan
 {
     private PaymentPlanId $id;
 
-    private string $name;
+    private PaymentPlanName $name;
 
     private PaymentPlanType $type;
 
-    /**
-     * @param PaymentPlanId $id
-     * @param string $name
-     * @param PaymentPlanType $type
-     */
     public function __construct(
         PaymentPlanId $id,
-        string $name,
+        PaymentPlanName $name,
         PaymentPlanType $type
     ) {
-        if (empty(trim($name)))
-        {
-            throw new InvalidArgumentException('Name of a payment plan cannot be empty.');
-        }
-        $this->name = $name;
-
         $this->id = $id;
+        $this->name = $name;
+        $this->type = $type;
+    }
+
+    public function rename(PaymentPlanName $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function changeType(PaymentPlanType $type): void
+    {
         $this->type = $type;
     }
 
@@ -53,7 +51,7 @@ final class PaymentPlan
     {
         return [
             'id' => $this->id->asString(),
-            'name' => $this->name,
+            'name' => $this->name->asString(),
             'type' => $this->type->option(),
         ];
     }

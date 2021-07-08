@@ -16,16 +16,16 @@ namespace Tests\Unit\Payman\Domain\Model\PaymentPlan;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
+use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
 
-final class PaymentPlanTypeTest extends TestCase
+final class PaymentPlanNameTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_cannot_be_instantiated_with_invalid_type_option(): void
+    public function it_cannot_be_instantiated_from_empty_string(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        PaymentPlanType::fromInt(50);
+        PaymentPlanName::fromString('');
     }
 }

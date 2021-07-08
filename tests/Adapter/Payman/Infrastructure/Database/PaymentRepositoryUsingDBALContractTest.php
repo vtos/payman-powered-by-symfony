@@ -17,6 +17,7 @@ namespace Tests\Adapter\Payman\Infrastructure\Database;
 use Doctrine\DBAL\Connection;
 use Payman\Domain\Model\PaymentPlan\PaymentPlan;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
+use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
 use Payman\Infrastructure\Database\PaymentPlanRepositoryUsingDBAL;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -69,7 +70,7 @@ final class PaymentRepositoryUsingDBALContractTest extends KernelTestCase
 
         $paymentPlan = new PaymentPlan(
             $paymentPlanId,
-            'Payment Plan 1',
+            PaymentPlanName::fromString('Payment Plan 1'),
             PaymentPlanType::fromInt(PaymentPlanType::LOCALS)
         );
 
@@ -86,16 +87,17 @@ final class PaymentRepositoryUsingDBALContractTest extends KernelTestCase
         $this->assertEquals(
             new PaymentPlan(
                 PaymentPlanId::fromString($paymentPlanRecord['id']),
-                $paymentPlanRecord['name'],
+                PaymentPlanName::fromString($paymentPlanRecord['name']),
                 PaymentPlanType::fromInt((int)$paymentPlanRecord['type'])
             ),
             $paymentPlan
         );
 
         // And then update it.
+        // TODO: make use of rename() method.
         $paymentPlan = new PaymentPlan(
             $paymentPlanId,
-            'Payment Plan 2',
+            PaymentPlanName::fromString('Payment Plan 2'),
             PaymentPlanType::fromInt(PaymentPlanType::FOREIGNERS)
         );
         $repository->store($paymentPlan);
@@ -111,7 +113,7 @@ final class PaymentRepositoryUsingDBALContractTest extends KernelTestCase
         $this->assertEquals(
             new PaymentPlan(
                 PaymentPlanId::fromString($paymentPlanRecord['id']),
-                $paymentPlanRecord['name'],
+                PaymentPlanName::fromString($paymentPlanRecord['name']),
                 PaymentPlanType::fromInt((int)$paymentPlanRecord['type'])
             ),
             $paymentPlan
@@ -132,7 +134,7 @@ final class PaymentRepositoryUsingDBALContractTest extends KernelTestCase
 
         $paymentPlan = new PaymentPlan(
             $paymentPlanId,
-            'Payment Plan 1',
+            PaymentPlanName::fromString('Payment Plan 1'),
             PaymentPlanType::fromInt(PaymentPlanType::LOCALS)
         );
 
