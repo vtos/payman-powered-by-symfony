@@ -14,14 +14,20 @@ declare(strict_types=1);
 
 namespace Payman\Application\PaymentPlans;
 
-/**
- * This is read model repository for payment plans.
- */
-interface PaymentPlans
+final class ListPaymentPlansQuery
 {
+    private PaymentPlans $paymentPlans;
+
+    public function __construct(PaymentPlans $paymentPlans)
+    {
+        $this->paymentPlans = $paymentPlans;
+    }
 
     /**
-     * @return PaymentPlan[] Array of read models of payment plans.
+     * @return array See {@link PaymentPlans::list()}.
      */
-    public function list(): array;
+    public function query(): array
+    {
+        return $this->paymentPlans->list();
+    }
 }

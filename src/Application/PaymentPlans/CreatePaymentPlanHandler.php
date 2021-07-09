@@ -18,6 +18,7 @@ use Payman\Domain\Model\PaymentPlan\PaymentPlan;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanRepository;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
+use Payman\Application\PaymentPlans\PaymentPlan as PaymentPlanRead;
 
 final class CreatePaymentPlanHandler
 {
@@ -28,14 +29,23 @@ final class CreatePaymentPlanHandler
         $this->repository = $repository;
     }
 
-    public function handle(CreatePaymentPlan $command): void
+    /**
+     * This method intentionally violates the CQS principle as it returns read model
+     *  of the created payment plan instance.
+     */
+    public function handle(CreatePaymentPlan $command): PaymentPlanRead
     {
+        $id = $this->repository->nextIdentity();
+        $name = PaymentPlanName::fromString($command->name());
+
         $this->repository->store(
             new PaymentPlan(
-                $this->repository->nextIdentity(),
-                PaymentPlanName::fromString($command->name()),
+                $id,
+                $name,
                 PaymentPlanType::fromInt($command->type())
             )
         );
+
+        return new PaymentPlanRead($id, $name);
     }
 }

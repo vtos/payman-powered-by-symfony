@@ -1,13 +1,13 @@
 <?php
 /**
- * This file is part of the vtos/payment application.
+ * This file is part of the vtos/payment-powered-by-symfony application.
  *
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  *
  * @copyright 2021 Vitaly Potenko <potenkov@gmail.com>
  * @license https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
- * @link https://github.com/vtos/payman GitHub
+ * @link https://github.com/vtos/payman-powered-by-symfony GitHub
  */
 
 declare(strict_types=1);
@@ -16,6 +16,7 @@ namespace Payman\Application;
 
 use Payman\Application\PaymentPlans\CreatePaymentPlan;
 use Payman\Application\PaymentPlans\CreatePaymentPlanHandler;
+use Payman\Application\PaymentPlans\PaymentPlan;
 use Payman\Application\PaymentPlans\RemovePaymentPlan;
 use Payman\Application\PaymentPlans\RemovePaymentPlanHandler;
 use Payman\Application\PaymentPlans\UpdatePaymentPlan;
@@ -28,6 +29,7 @@ use Payman\Application\Students\AssignStudentToPlan;
 use Payman\Application\Students\AssignStudentToPlanHandler;
 use Payman\Application\Students\UnassignStudentFromPlan;
 use Payman\Application\Students\UnassignStudentFromPlanHandler;
+use Payman\Application\PaymentPlans\ListPaymentPlansQuery;
 
 final class Application
 {
@@ -45,6 +47,8 @@ final class Application
 
     private UnassignStudentFromPlanHandler $unassignStudentFromPlanHandler;
 
+    private ListPaymentPlansQuery $listPaymentPlansQuery;
+
     public function __construct(
         CreatePaymentPlanHandler $createPaymentPlanHandler,
         UpdatePaymentPlanHandler $updatePaymentPlanHandler,
@@ -52,7 +56,9 @@ final class Application
         AddPaymentYearToPlanHandler $addPaymentYearToPlanHandler,
         RemovePaymentYearHandler $removePaymentYearHandler,
         AssignStudentToPlanHandler $assignStudentToPlanHandler,
-        UnassignStudentFromPlanHandler $unassignStudentFromPlanHandler
+        UnassignStudentFromPlanHandler $unassignStudentFromPlanHandler,
+        ListPaymentPlansQuery $listPaymentPlansQuery
+
     ) {
         $this->createPaymentPlanHandler = $createPaymentPlanHandler;
         $this->updatePaymentPlanHandler = $updatePaymentPlanHandler;
@@ -61,11 +67,15 @@ final class Application
         $this->removePaymentYearHandler = $removePaymentYearHandler;
         $this->assignStudentToPlanHandler = $assignStudentToPlanHandler;
         $this->unassignStudentFromPlanHandler = $unassignStudentFromPlanHandler;
+        $this->listPaymentPlansQuery = $listPaymentPlansQuery;
     }
 
-    public function createPaymentPlan(CreatePaymentPlan $command): void
+    /**
+     * See {@link CreatePaymentPlanHandler::handle()}
+     */
+    public function createPaymentPlan(CreatePaymentPlan $command): PaymentPlan
     {
-        $this->createPaymentPlanHandler->handle($command);
+        return $this->createPaymentPlanHandler->handle($command);
     }
 
     public function updatePaymentPlan(UpdatePaymentPlan $command): void
@@ -96,5 +106,13 @@ final class Application
     public function unassignStudentFromPlan(UnassignStudentFromPlan $command): void
     {
         $this->unassignStudentFromPlanHandler->handle($command);
+    }
+
+    /**
+     * @return array See {@link PaymentPlans::list()}.
+     */
+    public function listPaymentPlans(): array
+    {
+        return $this->listPaymentPlansQuery->query();
     }
 }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Payman\Application\PaymentPlans;
 
+use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
 
 /**
@@ -22,15 +23,21 @@ use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
  */
 final class PaymentPlan
 {
+    private PaymentPlanId $id;
+
     private PaymentPlanName $name;
 
-    public function __construct(PaymentPlanName $name)
+    public function __construct(PaymentPlanId $id, PaymentPlanName $name)
     {
+        $this->id = $id;
         $this->name = $name;
     }
 
-    public function name(): string
+    public function asArray(): array
     {
-        return $this->name->asString();
+        return [
+            'id' => $this->id->asString(),
+            'name' => $this->name->asString(),
+        ];
     }
 }
