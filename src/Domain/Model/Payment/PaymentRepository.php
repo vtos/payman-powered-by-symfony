@@ -17,4 +17,6 @@ namespace Payman\Domain\Model\Payment;
 interface PaymentRepository
 {
     public function store(Payment $payment): void;
+
+    public function nextIdentity(): PaymentId;
 }
