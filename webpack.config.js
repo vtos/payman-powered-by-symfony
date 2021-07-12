@@ -20,8 +20,10 @@ Encore
      * Each entry will result in one JavaScript file (e.g. app.js)
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
-    .addEntry('js/app', './node_modules/bootstrap/dist/js/bootstrap.min.js')
-    .addEntry('css/app', './node_modules/bootstrap/dist/css/bootstrap.min.css')
+    .addEntry('css/app', [
+        './node_modules/bootstrap/dist/css/bootstrap.min.css',
+        './assets/styles/app.css'
+    ])
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')
