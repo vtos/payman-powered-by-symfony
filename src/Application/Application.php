@@ -21,6 +21,8 @@ use Payman\Application\PaymentPlans\RemovePaymentPlan;
 use Payman\Application\PaymentPlans\RemovePaymentPlanHandler;
 use Payman\Application\PaymentPlans\UpdatePaymentPlan;
 use Payman\Application\PaymentPlans\UpdatePaymentPlanHandler;
+use Payman\Application\Payments\UploadPayment;
+use Payman\Application\Payments\UploadPaymentHandler;
 use Payman\Application\PaymentYears\AddPaymentYearToPlan;
 use Payman\Application\PaymentYears\AddPaymentYearToPlanHandler;
 use Payman\Application\PaymentYears\RemovePaymentYear;
@@ -47,6 +49,8 @@ final class Application
 
     private UnassignStudentFromPlanHandler $unassignStudentFromPlanHandler;
 
+    private UploadPaymentHandler $uploadPaymentHandler;
+
     private ListPaymentPlansQuery $listPaymentPlansQuery;
 
     public function __construct(
@@ -57,6 +61,7 @@ final class Application
         RemovePaymentYearHandler $removePaymentYearHandler,
         AssignStudentToPlanHandler $assignStudentToPlanHandler,
         UnassignStudentFromPlanHandler $unassignStudentFromPlanHandler,
+        UploadPaymentHandler $uploadPaymentHandler,
         ListPaymentPlansQuery $listPaymentPlansQuery
 
     ) {
@@ -67,6 +72,7 @@ final class Application
         $this->removePaymentYearHandler = $removePaymentYearHandler;
         $this->assignStudentToPlanHandler = $assignStudentToPlanHandler;
         $this->unassignStudentFromPlanHandler = $unassignStudentFromPlanHandler;
+        $this->uploadPaymentHandler = $uploadPaymentHandler;
         $this->listPaymentPlansQuery = $listPaymentPlansQuery;
     }
 
@@ -106,6 +112,11 @@ final class Application
     public function unassignStudentFromPlan(UnassignStudentFromPlan $command): void
     {
         $this->unassignStudentFromPlanHandler->handle($command);
+    }
+
+    public function uploadPayment(UploadPayment $command): void
+    {
+        $this->uploadPaymentHandler->handle($command);
     }
 
     /**

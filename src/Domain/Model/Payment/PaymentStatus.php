@@ -26,6 +26,8 @@ final class PaymentStatus
 
     public const REJECTED = 4;
 
+    private int $option;
+
     private function __construct(int $statusOption)
     {
         if (!in_array(
@@ -39,6 +41,22 @@ final class PaymentStatus
         )) {
             throw new InvalidArgumentException("Invalid payment status option: $statusOption.");
         }
+        $this->option = $statusOption;
+    }
+
+    public function isNone(): bool
+    {
+        return $this->option === self::NONE;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->option === self::REJECTED;
+    }
+
+    public function isAccepted(): bool
+    {
+        return $this->option === self::ACCEPTED;
     }
 
     public static function none(): self
