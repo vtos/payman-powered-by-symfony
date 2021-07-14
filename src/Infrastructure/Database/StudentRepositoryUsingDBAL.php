@@ -76,6 +76,6 @@ final class StudentRepositoryUsingDBAL implements StudentRepository
             ->execute()
             ->fetchOne();
 
-        return (0 !== (int)$recordsCount);
+        return 0 !== (int)$recordsCount;
     }
 }
