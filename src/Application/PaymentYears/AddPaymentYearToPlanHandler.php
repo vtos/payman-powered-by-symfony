@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace Payman\Application\PaymentYears;
 
+use RuntimeException;
+use Payman\Domain\Model\PaymentPlan\CouldNotAddPaymentYearToPaymentPlan;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
+use Payman\Domain\Model\PaymentPlan\PaymentPlanRepository;
 use Payman\Domain\Model\PaymentYear\Cost;
 use Payman\Domain\Model\PaymentYear\PaymentYear;
 use Payman\Domain\Model\PaymentYear\PaymentYearId;
@@ -23,22 +26,41 @@ use Payman\Domain\Model\PaymentYear\PaymentYearStatus;
 
 final class AddPaymentYearToPlanHandler
 {
-    private PaymentYearRepository $repository;
+    private PaymentYearRepository $paymentYearRepository;
 
-    public function __construct(PaymentYearRepository $repository)
-    {
-        $this->repository = $repository;
+    private PaymentPlanRepository $paymentPlanRepository;
+
+    public function __construct(
+        PaymentYearRepository $paymentYearRepository,
+        PaymentPlanRepository $paymentPlanRepository
+    ) {
+        $this->paymentYearRepository = $paymentYearRepository;
+        $this->paymentPlanRepository = $paymentPlanRepository;
     }
 
+    /**
+     * @throws RuntimeException
+     */
     public function handle(AddPaymentYearToPlan $command): void
     {
-        $id = $this->repository->nextIdentity();
+        $paymentPlanId = PaymentPlanId::fromString(
+            $command->paymentPlanId()
+        );
 
-        $this->repository->store(
+        if (!$this->paymentPlanRepository->paymentPlanExists($paymentPlanId)) {
+            throw CouldNotAddPaymentYearToPaymentPlan::becausePaymentPlanNotExists($paymentPlanId);
+        }
+        if ($this->paymentYearRepository->currentPaymentYearExistsInPaymentPlanWithId($paymentPlanId)) {
+            throw CouldNotAddPaymentYearToPaymentPlan::becauseCurrentPaymentYearAlreadyExists($paymentPlanId);
+        }
+
+        $id = $this->paymentYearRepository->nextIdentity();
+
+        $this->paymentYearRepository->store(
             new PaymentYear(
                 PaymentYearId::fromString($id),
                 $command->name(),
-                PaymentPlanId::fromString($command->paymentPlanId()),
+                $paymentPlanId,
                 Cost::fromInt($command->cost()),
                 PaymentYearStatus::fromInt($command->status()),
                 $command->visible()
