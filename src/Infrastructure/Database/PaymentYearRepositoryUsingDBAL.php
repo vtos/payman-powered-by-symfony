@@ -14,17 +14,62 @@ declare(strict_types=1);
 
 namespace Payman\Infrastructure\Database;
 
+use Exception;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DoctrineDBALDriverException;
+use Doctrine\DBAL\Exception as DoctrineDBALException;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
 use Payman\Domain\Model\PaymentYear\PaymentYear;
 use Payman\Domain\Model\PaymentYear\PaymentYearId;
 use Payman\Domain\Model\PaymentYear\PaymentYearRepository;
+use Payman\Domain\Model\PaymentYear\PaymentYearStatus;
 
 final class PaymentYearRepositoryUsingDBAL implements PaymentYearRepository
 {
+    private const DB_TABLE = 'payment_years';
 
+    private const IDENTITY_SEQUENCE_TABLE = 'models_id_sequence';
+
+    private const MODEL_NAME = 'payment_year';
+
+    private Connection $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
+     * @throws DoctrineDBALException
+     * @throws DoctrineDBALDriverException
+     */
     public function store(PaymentYear $paymentYear): void
     {
-        // TODO: Implement store() method.
+        $record = $paymentYear->asArray();
+
+        $recordsWithIdCount = $this->connection->createQueryBuilder()
+            ->select('COUNT(*)')
+            ->from(self::DB_TABLE)
+            ->where('id = :id')
+            ->setParameter(':id', $record['id'])
+            ->execute()
+            ->fetchOne();
+
+        $recordWithIdExists = (0 !== (int)$recordsWithIdCount);
+
+        if (!$recordWithIdExists) {
+            $this->connection->insert(self::DB_TABLE, $record);
+
+            return;
+        }
+
+        $this->connection->update(
+            self::DB_TABLE,
+            $record,
+            [
+                'id' => $record['id'],
+            ]
+        );
     }
 
     public function remove(PaymentYearId $id): void
@@ -32,16 +77,68 @@ final class PaymentYearRepositoryUsingDBAL implements PaymentYearRepository
         // TODO: Implement remove() method.
     }
 
-    public function nextIdentity(): string
+    public function nextIdentity(): PaymentYearId
     {
-        // TODO: Implement nextIdentity() method.
+        $this->connection->beginTransaction();
+
+        try {
+            $sequence = $this->connection->createQueryBuilder()
+                ->select('seq')
+                ->from(self::IDENTITY_SEQUENCE_TABLE)
+                ->where('model = :model')
+                ->setParameter(':model', self::MODEL_NAME)
+                ->execute()
+                ->fetchOne();
+            if (false === $sequence) {
+                $sequence = 1;
+
+                $this->connection->insert(
+                    self::IDENTITY_SEQUENCE_TABLE,
+                    [
+                        'model' => self::MODEL_NAME,
+                        'seq' => 2,
+                    ]
+                );
+            } else {
+                $this->connection->update(
+                    self::IDENTITY_SEQUENCE_TABLE,
+                    [
+                        'seq' => $sequence + 1,
+                    ],
+                    [
+                        'model' => self::MODEL_NAME,
+                    ]
+                );
+            }
+
+            $this->connection->commit();
+        } catch (Exception $exception) {
+            $this->connection->rollBack();
+
+            throw $exception;
+        }
+
+        return PaymentYearId::fromString(
+            (string)$sequence
+        );
     }
 
     /**
      * @inheritDoc
+     * @throws DoctrineDBALException
+     * @throws DoctrineDBALDriverException
      */
-    public function currentPaymentYearExistsInPaymentPlanWithId(PaymentPlanId $paymentPlanId): bool
+    public function currentPaymentYearExistsInPaymentPlan(PaymentPlanId $paymentPlanId): bool
     {
-        // TODO: Implement currentPaymentYearExistsInPaymentPlanWithId() method.
+        $recordsCount = $this->connection->createQueryBuilder()
+            ->select('COUNT(*)')
+            ->from(self::DB_TABLE)
+            ->where('payment_plan_id = :payment_plan_id AND status = :status')
+            ->setParameter(':payment_plan_id', $paymentPlanId->asString())
+            ->setParameter(':status', PaymentYearStatus::CURRENT)
+            ->execute()
+            ->fetchOne();
+
+        return 0 !== (int)$recordsCount;
     }
 }

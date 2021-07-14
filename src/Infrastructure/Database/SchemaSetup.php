@@ -37,8 +37,28 @@ final class SchemaSetup
 
         $paymentPlansTable->setPrimaryKey(
             [
-                'id'
+                'id',
             ]
+        );
+
+        $paymentYearsTable = $schema->createTable('payment_years');
+        $paymentYearsTable->addColumn('id', 'bigint', ['unsigned' => true]);
+        $paymentYearsTable->addColumn('name', 'string', ['length' => 255]);
+        $paymentYearsTable->addColumn('payment_plan_id', 'bigint', ['unsigned' => true]);
+        $paymentYearsTable->addColumn('cost', 'smallint', ['unsigned' => true]);
+        $paymentYearsTable->addColumn('status', 'smallint', ['unsigned' => true]);
+        $paymentYearsTable->addColumn('visible', 'smallint', ['unsigned' => true]);
+
+        $paymentYearsTable->setPrimaryKey(
+            [
+                'id',
+            ]
+        );
+        $paymentYearsTable->addIndex(
+            [
+                'payment_plan_id'
+            ],
+            'payment_plan_id'
         );
 
         $studentsAssignmentTable = $schema->createTable('payment_plans_students');
@@ -80,6 +100,7 @@ final class SchemaSetup
 
         $schemaManager = $this->connection->getSchemaManager();
         $schemaManager->dropAndCreateTable($paymentPlansTable);
+        $schemaManager->dropAndCreateTable($paymentYearsTable);
         $schemaManager->dropAndCreateTable($modelsIdentitySequence);
         $schemaManager->dropAndCreateTable($studentsAssignmentTable);
     }

@@ -14,28 +14,18 @@ declare(strict_types=1);
 
 namespace Payman\Domain\Model\PaymentYear;
 
-use InvalidArgumentException;
+use RuntimeException;
+use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
 
-final class Cost
+final class CouldNotAddPaymentYearToPlan extends RuntimeException
 {
-    private int $cost;
-
-    private function __construct(int $costValue)
+    public static function becauseCurrentPaymentYearAlreadyExists(PaymentPlanId $paymentPlanId): self
     {
-        if ($costValue <= 0)
-        {
-            throw new InvalidArgumentException('Cost must have a positive value.');
-        }
-        $this->cost = $costValue;
-    }
-
-    public function asInt(): int
-    {
-        return $this->cost;
-    }
-
-    public static function fromInt(int $costValue): self
-    {
-        return new self($costValue);
+        return new self(
+            sprintf(
+                'A current payment year already exists in payment plan with id %s.',
+                $paymentPlanId->asString()
+            )
+        );
     }
 }
