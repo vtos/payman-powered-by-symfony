@@ -41,6 +41,34 @@ final class SchemaSetup
             ]
         );
 
+        $studentsAssignmentTable = $schema->createTable('payment_plans_students');
+        $studentsAssignmentTable->addColumn('student_id', 'string', ['length' => 255]);
+        $studentsAssignmentTable->addColumn('student_name', 'string', ['length' => 255]);
+        $studentsAssignmentTable->addColumn('payment_plan_id', 'bigint', ['unsigned' => true]);
+
+        $studentsAssignmentTable->addForeignKeyConstraint(
+            'payment_plans',
+            [
+                'payment_plan_id'
+            ],
+            [
+                'id',
+            ]
+        );
+        $studentsAssignmentTable->addUniqueIndex(
+            [
+                'student_id',
+            ],
+            'student_id'
+        );
+        $studentsAssignmentTable->addUniqueIndex(
+            [
+                'student_id',
+                'payment_plan_id',
+            ],
+            'student_payment_plan'
+        );
+
         $modelsIdentitySequence = $schema->createTable('models_id_sequence');
         $modelsIdentitySequence->addColumn('model', 'string', ['length' => 100]);
         $modelsIdentitySequence->addColumn('seq', 'bigint', ['unsigned' => true]);
@@ -53,5 +81,6 @@ final class SchemaSetup
         $schemaManager = $this->connection->getSchemaManager();
         $schemaManager->dropAndCreateTable($paymentPlansTable);
         $schemaManager->dropAndCreateTable($modelsIdentitySequence);
+        $schemaManager->dropAndCreateTable($studentsAssignmentTable);
     }
 }

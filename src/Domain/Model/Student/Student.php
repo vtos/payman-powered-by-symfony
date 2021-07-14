@@ -39,4 +39,13 @@ final class Student
         $this->id = $id;
         $this->paymentPlanId = $paymentPlanId;
     }
+
+    public function asArray(): array
+    {
+        return [
+            'id' => $this->id->asString(),
+            'name' => $this->name,
+            'payment_plan_id' => $this->paymentPlanId->asString(),
+        ];
+    }
 }

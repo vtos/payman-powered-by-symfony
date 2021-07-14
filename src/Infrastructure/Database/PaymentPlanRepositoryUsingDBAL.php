@@ -132,4 +132,17 @@ final class PaymentPlanRepositoryUsingDBAL implements PaymentPlanRepository
             (string)$sequence
         );
     }
+
+    public function paymentPlanExists(PaymentPlanId $id): bool
+    {
+        $recordsWithIdCount = $this->connection->createQueryBuilder()
+            ->select('COUNT(*)')
+            ->from(self::MODEL_TABLE)
+            ->where('id = :id')
+            ->setParameter(':id', $id->asString())
+            ->execute()
+            ->fetchOne();
+
+        return (0 !== (int)$recordsWithIdCount);
+    }
 }

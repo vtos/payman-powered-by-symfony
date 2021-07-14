@@ -19,4 +19,6 @@ interface StudentRepository
     public function store(Student $student): void;
 
     public function remove(StudentId $id): void;
+
+    public function studentWithPaymentPlanExists(StudentId $studentId): bool;
 }

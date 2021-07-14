@@ -14,28 +14,17 @@ declare(strict_types=1);
 
 namespace Payman\Domain\Model\Student;
 
-use InvalidArgumentException;
+use RuntimeException;
 
-final class StudentId
+final class CouldNotUnassignStudentFromPaymentPlan extends RuntimeException
 {
-    private string $id;
-
-    private function __construct(string $id)
+    public static function becauseStudentIsUnknown(StudentId $id): self
     {
-        if (empty(trim($id)))
-        {
-            throw new InvalidArgumentException('Student id cannot be empty.');
-        }
-        $this->id = $id;
-    }
-
-    public function asString(): string
-    {
-        return $this->id;
-    }
-
-    public static function fromString(string $str): self
-    {
-        return new self($str);
+        return new self(
+            sprintf(
+                'Payment plan is not found for student with id %s.',
+                $id->asString()
+            )
+        );
     }
 }

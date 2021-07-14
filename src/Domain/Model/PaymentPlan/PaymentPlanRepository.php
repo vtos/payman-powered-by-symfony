@@ -20,5 +20,7 @@ interface PaymentPlanRepository
 
     public function remove(PaymentPlanId $id): void;
 
+    public function paymentPlanExists(PaymentPlanId $id): bool;
+
     public function nextIdentity(): PaymentPlanId;
 }
