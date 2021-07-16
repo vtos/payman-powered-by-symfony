@@ -26,7 +26,20 @@ final class PaymentController extends AbstractController
      */
     public function upload(): Response
     {
-        $form = $this->createForm(UploadPaymentType::class);
+
+//        return $this->render('payment/noplan.html.twig');
+
+
+        $form = $this->createForm(
+            UploadPaymentType::class,
+            [],
+            [
+                'payment_plans_options' => [
+                    '1' => 'Option 1',
+                    '2' => 'Option 2',
+                ],
+            ]
+        );
 
         return $this->render(
             'payment/upload.html.twig',

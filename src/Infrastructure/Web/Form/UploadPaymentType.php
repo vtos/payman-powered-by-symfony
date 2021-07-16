@@ -16,6 +16,7 @@ namespace Payman\Infrastructure\Web\Form;
 
 use Payman\Domain\Model\Payment\Payment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,6 +28,13 @@ final class UploadPaymentType extends AbstractType
     {
         $builder
             ->add('amount', TextType::class)
+            ->add(
+                'payment_year',
+                ChoiceList::class,
+                [
+                    'choices' => $options['payment_years_options'],
+                ]
+            )
             ->add('upload', SubmitType::class);
     }
 
