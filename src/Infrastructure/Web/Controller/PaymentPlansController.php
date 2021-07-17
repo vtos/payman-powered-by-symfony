@@ -17,6 +17,7 @@ namespace Payman\Infrastructure\Web\Controller;
 use Payman\Application\Application;
 use Payman\Application\PaymentPlans\CreatePaymentPlan;
 use Payman\Application\PaymentPlans\PaymentPlan;
+use Payman\Application\PaymentPlans\PaymentPlans;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,14 +28,14 @@ final class PaymentPlansController extends AbstractController
     /**
      * @Route("/api/v1/plans", methods={"GET"}, name="api_payment_plans_list")
      */
-    public function list(Application $application): JsonResponse
+    public function list(PaymentPlans $paymentPlans): JsonResponse
     {
         return new JsonResponse(
             array_map(
                 function(PaymentPlan $paymentPlan) {
                     return $paymentPlan->asArray();
                 },
-                $application->listPaymentPlans()
+                $paymentPlans->list()
             )
         );
     }

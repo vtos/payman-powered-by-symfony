@@ -21,7 +21,7 @@ interface PaymentPlans
 {
 
     /**
-     * @return PaymentPlan[] Array of read models of payment plans.
+     * @return PaymentPlan[] Array of read models for payment plans.
      */
     public function list(): array;
 }

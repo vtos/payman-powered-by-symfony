@@ -51,8 +51,6 @@ final class Application
 
     private UploadPaymentHandler $uploadPaymentHandler;
 
-    private ListPaymentPlansQuery $listPaymentPlansQuery;
-
     public function __construct(
         CreatePaymentPlanHandler $createPaymentPlanHandler,
         UpdatePaymentPlanHandler $updatePaymentPlanHandler,
@@ -61,8 +59,7 @@ final class Application
         RemovePaymentYearHandler $removePaymentYearHandler,
         AssignStudentToPlanHandler $assignStudentToPlanHandler,
         UnassignStudentFromPlanHandler $unassignStudentFromPlanHandler,
-        UploadPaymentHandler $uploadPaymentHandler,
-        ListPaymentPlansQuery $listPaymentPlansQuery
+        UploadPaymentHandler $uploadPaymentHandler
 
     ) {
         $this->createPaymentPlanHandler = $createPaymentPlanHandler;
@@ -73,7 +70,6 @@ final class Application
         $this->assignStudentToPlanHandler = $assignStudentToPlanHandler;
         $this->unassignStudentFromPlanHandler = $unassignStudentFromPlanHandler;
         $this->uploadPaymentHandler = $uploadPaymentHandler;
-        $this->listPaymentPlansQuery = $listPaymentPlansQuery;
     }
 
     /**
@@ -117,13 +113,5 @@ final class Application
     public function uploadPayment(UploadPayment $command): void
     {
         $this->uploadPaymentHandler->handle($command);
-    }
-
-    /**
-     * @return array See {@link PaymentPlans::list()}.
-     */
-    public function listPaymentPlans(): array
-    {
-        return $this->listPaymentPlansQuery->query();
     }
 }
