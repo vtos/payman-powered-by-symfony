@@ -22,6 +22,10 @@ final class PaymentYear
 
     private string $name;
 
+    /**
+     * @param PaymentYearId $id
+     * @param string $name
+     */
     public function __construct(PaymentYearId $id, string $name)
     {
         $this->id = $id;

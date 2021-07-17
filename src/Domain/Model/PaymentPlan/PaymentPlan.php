@@ -22,6 +22,11 @@ final class PaymentPlan
 
     private PaymentPlanType $type;
 
+    /**
+     * @param PaymentPlanId $id
+     * @param PaymentPlanName $name
+     * @param PaymentPlanType $type
+     */
     public function __construct(
         PaymentPlanId $id,
         PaymentPlanName $name,

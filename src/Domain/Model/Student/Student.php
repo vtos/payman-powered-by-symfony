@@ -25,6 +25,11 @@ final class Student
 
     private PaymentPlanId $paymentPlanId;
 
+    /**
+     * @param StudentId $id
+     * @param string $name
+     * @param PaymentPlanId $paymentPlanId
+     */
     public function __construct(
         StudentId $id,
         string $name,

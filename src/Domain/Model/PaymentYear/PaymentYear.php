@@ -31,6 +31,14 @@ final class PaymentYear
 
     private bool $visible;
 
+    /**
+     * @param PaymentYearId $id
+     * @param string $name
+     * @param PaymentPlanId $paymentPlanId
+     * @param Cost $cost
+     * @param PaymentYearStatus $status
+     * @param bool $visible
+     */
     public function __construct(
         PaymentYearId $id,
         string $name,
