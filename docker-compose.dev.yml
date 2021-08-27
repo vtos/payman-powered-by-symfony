@@ -1,0 +1,9 @@
+version: '3'
+services:
+  web:
+    build: ./docker/dev/
+    ports:
+      - '8080:8000'
+    volumes:
+      - .:/usr/apps/payman
+    command: [sh, -c, "php -S 0.0.0.0:8000 -t ./public"]
