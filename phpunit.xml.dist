@@ -7,6 +7,7 @@
          colors="true"
          bootstrap="tests/bootstrap.php"
          convertDeprecationsToExceptions="false"
+         testdox="true"
 >
     <php>
         <ini name="error_reporting" value="-1" />
@@ -25,6 +26,9 @@
         </testsuite>
         <testsuite name="adapter">
             <directory>./tests/Adapter</directory>
+        </testsuite>
+        <testsuite name="functional">
+            <directory>./tests/Functional</directory>
         </testsuite>
     </testsuites>
 
