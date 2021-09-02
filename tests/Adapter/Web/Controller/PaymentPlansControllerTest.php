@@ -14,24 +14,37 @@ declare(strict_types=1);
 
 namespace Tests\Adapter\Web\Controller;
 
-use PHPUnit\Framework\TestCase;
-use Payman\Application\PaymentPlans\CreatePaymentPlanHandler;
-use Payman\Application\PaymentPlans\CreatePaymentPlan;
-use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Payman\Application\CreatePaymentPlan\CreatePaymentPlanService;
+use Payman\Application\CreatePaymentPlan\CreatePaymentPlan;
 use Payman\Application\PaymentPlans\PaymentPlan as PaymentPlanReadModel;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
+use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
 
-class PaymentPlansControllerTest extends TestCase
+class PaymentPlansControllerTest extends KernelTestCase
 {
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        self::bootKernel([
+            'environment' => 'test',
+            'debug' => true,
+        ]);
+    }
 
     /**
      * @test
      */
     public function it_calls_service_to_create_a_payment_plan(): void
     {
-        $createOrderService = $this->createMock(CreatePaymentPlanHandler::class);
-        $createOrderService->expects($this->once())
+        $createPlanService = $this->createMock(CreatePaymentPlanService::class);
+        self::$kernel->getContainer()->set(CreatePaymentPlanService::class, $createPlanService);
+
+        $createPlanService->expects($this->once())
             ->method('handle')
             ->with(
                 new CreatePaymentPlan('Create Payment Plan Test', PaymentPlanType::LOCALS)
@@ -44,5 +57,16 @@ class PaymentPlansControllerTest extends TestCase
                     )
                 )
             );
+
+        static::$kernel->handle(
+            Request::create(
+                '/api/v1/plans',
+                'POST',
+                [
+                    'name' => 'Create Payment Plan Test',
+                    'type' => PaymentPlanType::LOCALS,
+                ]
+            )
+        );
     }
 }

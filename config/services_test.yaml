@@ -1,0 +1,3 @@
+services:
+  Payman\Application\CreatePaymentPlan\CreatePaymentPlanService:
+    public: true

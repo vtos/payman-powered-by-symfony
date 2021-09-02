@@ -20,6 +20,10 @@ services:
 
     Payman\Application\:
         resource: '../src/Application/'
+        # Have to exclude those DTOs explicitly here.
+        # Maybe there's some mask definition to avoid listing of all the DTOs?
+        exclude:
+            - '../src/Application/CreatePaymentPlan/CreatePaymentPlan.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -42,6 +46,7 @@ services:
     Payman\Infrastructure\Database\SchemaSetup:
         public: true
 
+    Payman\Application\CreatePaymentPlan\CreatePaymentPlanService: '@Payman\Application\CreatePaymentPlan\CreatePaymentPlanHandler'
     Payman\Domain\Model\PaymentPlan\PaymentPlanRepository: '@Payman\Infrastructure\Database\PaymentPlanRepositoryUsingDBAL'
     Payman\Domain\Model\PaymentYear\PaymentYearRepository: '@Payman\Infrastructure\Database\PaymentYearRepositoryUsingDBAL'
     Payman\Domain\Model\Student\StudentRepository: '@Payman\Infrastructure\Database\StudentRepositoryUsingDBAL'

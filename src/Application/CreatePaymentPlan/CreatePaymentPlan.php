@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Payman\Application\PaymentPlans;
+namespace Payman\Application\CreatePaymentPlan;
 
 /**
  * A point of contact between the application infrastructure and the application domain - a command (a DTO object),

@@ -59,7 +59,7 @@ final class PaymentPlanRepositoryUsingDBALContractTest extends KernelTestCase
     /**
      * @test
      */
-    public function it_stores_payment_plan(): void
+    public function it_stores_a_payment_plan(): void
     {
         $container = self::getContainer();
 
@@ -123,7 +123,7 @@ final class PaymentPlanRepositoryUsingDBALContractTest extends KernelTestCase
     /**
      * @test
      */
-    public function it_removes_payment_plan(): void
+    public function it_removes_a_payment_plan(): void
     {
         $container = self::getContainer();
 

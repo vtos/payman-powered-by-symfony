@@ -43,7 +43,7 @@ final class PaymentYearsUsingDBALContractTest extends KernelTestCase
     /**
      * @test
      */
-    public function it_fetches_payment_years_fro_student(): void
+    public function it_fetches_payment_years_for_student(): void
     {
         // Init required services.
         $container = self::getContainer();

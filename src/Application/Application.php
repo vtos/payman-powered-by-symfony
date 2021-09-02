@@ -14,9 +14,6 @@ declare(strict_types=1);
 
 namespace Payman\Application;
 
-use Payman\Application\PaymentPlans\CreatePaymentPlan;
-use Payman\Application\PaymentPlans\CreatePaymentPlanHandler;
-use Payman\Application\PaymentPlans\PaymentPlan;
 use Payman\Application\PaymentPlans\RemovePaymentPlan;
 use Payman\Application\PaymentPlans\RemovePaymentPlanHandler;
 use Payman\Application\PaymentPlans\UpdatePaymentPlan;
@@ -31,11 +28,9 @@ use Payman\Application\Students\AssignStudentToPlan;
 use Payman\Application\Students\AssignStudentToPlanHandler;
 use Payman\Application\Students\UnassignStudentFromPlan;
 use Payman\Application\Students\UnassignStudentFromPlanHandler;
-use Payman\Application\PaymentPlans\ListPaymentPlansQuery;
 
 final class Application
 {
-    private CreatePaymentPlanHandler $createPaymentPlanHandler;
 
     private UpdatePaymentPlanHandler $updatePaymentPlanHandler;
 
@@ -52,7 +47,6 @@ final class Application
     private UploadPaymentHandler $uploadPaymentHandler;
 
     public function __construct(
-        CreatePaymentPlanHandler $createPaymentPlanHandler,
         UpdatePaymentPlanHandler $updatePaymentPlanHandler,
         RemovePaymentPlanHandler $removePaymentPlanHandler,
         AddPaymentYearToPlanHandler $addPaymentYearToPlanHandler,
@@ -62,7 +56,6 @@ final class Application
         UploadPaymentHandler $uploadPaymentHandler
 
     ) {
-        $this->createPaymentPlanHandler = $createPaymentPlanHandler;
         $this->updatePaymentPlanHandler = $updatePaymentPlanHandler;
         $this->removePaymentPlanHandler = $removePaymentPlanHandler;
         $this->addPaymentYearToPlanHandler = $addPaymentYearToPlanHandler;
@@ -70,14 +63,6 @@ final class Application
         $this->assignStudentToPlanHandler = $assignStudentToPlanHandler;
         $this->unassignStudentFromPlanHandler = $unassignStudentFromPlanHandler;
         $this->uploadPaymentHandler = $uploadPaymentHandler;
-    }
-
-    /**
-     * See {@link CreatePaymentPlanHandler::handle()}
-     */
-    public function createPaymentPlan(CreatePaymentPlan $command): PaymentPlan
-    {
-        return $this->createPaymentPlanHandler->handle($command);
     }
 
     public function updatePaymentPlan(UpdatePaymentPlan $command): void

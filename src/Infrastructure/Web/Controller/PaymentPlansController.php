@@ -14,14 +14,14 @@ declare(strict_types=1);
 
 namespace Payman\Infrastructure\Web\Controller;
 
-use Payman\Application\Application;
-use Payman\Application\PaymentPlans\CreatePaymentPlan;
-use Payman\Application\PaymentPlans\PaymentPlan;
-use Payman\Application\PaymentPlans\PaymentPlans;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Payman\Application\CreatePaymentPlan\CreatePaymentPlanService;
+use Payman\Application\CreatePaymentPlan\CreatePaymentPlan;
+use Payman\Application\PaymentPlans\PaymentPlan;
+use Payman\Application\PaymentPlans\PaymentPlans;
 
 final class PaymentPlansController extends AbstractController
 {
@@ -43,9 +43,9 @@ final class PaymentPlansController extends AbstractController
     /**
      * @Route("/api/v1/plans", methods={"POST"}, name="api_create_payment_plan")
      */
-    public function create(Request $request, Application $application): JsonResponse
+    public function create(Request $request, CreatePaymentPlanService $createPaymentPlanService): JsonResponse
     {
-        $paymentPlan = $application->createPaymentPlan(
+        $paymentPlan = $createPaymentPlanService->handle(
             new CreatePaymentPlan(
                 $request->get('name'),
                 (int)$request->get('type')

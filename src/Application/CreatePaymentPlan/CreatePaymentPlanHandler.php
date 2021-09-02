@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Payman\Application\PaymentPlans;
+namespace Payman\Application\CreatePaymentPlan;
 
 use Payman\Domain\Model\PaymentPlan\PaymentPlan;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
@@ -20,7 +20,7 @@ use Payman\Domain\Model\PaymentPlan\PaymentPlanRepository;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
 use Payman\Application\PaymentPlans\PaymentPlan as PaymentPlanRead;
 
-final class CreatePaymentPlanHandler
+final class CreatePaymentPlanHandler implements CreatePaymentPlanService
 {
     private PaymentPlanRepository $repository;
 
@@ -30,19 +30,19 @@ final class CreatePaymentPlanHandler
     }
 
     /**
-     * This method intentionally violates the CQS principle as it returns read model
+     * This method intentionally violates the CQS principle as it returns a read model
      *  of the created payment plan instance.
      */
-    public function handle(CreatePaymentPlan $command): PaymentPlanRead
+    public function handle(CreatePaymentPlan $createPaymentPlan): PaymentPlanRead
     {
         $id = $this->repository->nextIdentity();
-        $name = PaymentPlanName::fromString($command->name());
+        $name = PaymentPlanName::fromString($createPaymentPlan->name());
 
         $this->repository->store(
             new PaymentPlan(
                 $id,
                 $name,
-                PaymentPlanType::fromInt($command->type())
+                PaymentPlanType::fromInt($createPaymentPlan->type())
             )
         );
 
