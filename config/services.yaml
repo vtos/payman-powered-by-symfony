@@ -51,4 +51,4 @@ services:
     Payman\Domain\Model\PaymentYear\PaymentYearRepository: '@Payman\Infrastructure\Database\PaymentYearRepositoryUsingDBAL'
     Payman\Domain\Model\Student\StudentRepository: '@Payman\Infrastructure\Database\StudentRepositoryUsingDBAL'
     Payman\Domain\Model\Payment\PaymentRepository: '@Payman\Infrastructure\Database\PaymentRepositoryUsingDBAL'
-    Payman\Application\PaymentPlans\PaymentPlans: '@Payman\Infrastructure\Database\PaymentPlansUsingDBAL'
+    Payman\Application\ListPaymentPlans\PaymentPlans: '@Payman\Infrastructure\Database\PaymentPlansUsingDBAL'

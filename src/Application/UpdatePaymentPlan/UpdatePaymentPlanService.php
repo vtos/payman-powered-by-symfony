@@ -12,12 +12,10 @@
 
 declare(strict_types=1);
 
-namespace Payman\Application\CreatePaymentPlan;
+namespace Payman\Application\UpdatePaymentPlan;
 
-use Payman\Application\ListPaymentPlans\PaymentPlan as PaymentPlanReadModel;
-
-interface CreatePaymentPlanService
+interface UpdatePaymentPlanService
 {
 
-    public function handle(CreatePaymentPlan $createPaymentPlan): PaymentPlanReadModel;
+    public function handle(UpdatePaymentPlan $command): void;
 }

@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Payman\Application\PaymentPlans;
+namespace Payman\Application\ListPaymentPlans;
 
 /**
  * This is read model repository for payment plans.

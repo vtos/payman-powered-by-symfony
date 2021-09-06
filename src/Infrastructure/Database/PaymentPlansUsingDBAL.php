@@ -16,8 +16,8 @@ namespace Payman\Infrastructure\Database;
 
 use Doctrine\DBAL\Exception as DoctrineDBALException;
 use Doctrine\DBAL\Connection;
-use Payman\Application\PaymentPlans\PaymentPlan;
-use Payman\Application\PaymentPlans\PaymentPlans;
+use Payman\Application\ListPaymentPlans\PaymentPlan;
+use Payman\Application\ListPaymentPlans\PaymentPlans;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
 

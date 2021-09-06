@@ -20,8 +20,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Payman\Application\CreatePaymentPlan\CreatePaymentPlanService;
 use Payman\Application\CreatePaymentPlan\CreatePaymentPlan;
-use Payman\Application\PaymentPlans\PaymentPlan;
-use Payman\Application\PaymentPlans\PaymentPlans;
+use Payman\Application\ListPaymentPlans\PaymentPlans;
+use Payman\Application\ListPaymentPlans\PaymentPlan as PaymentPlanReadModel;
 
 final class PaymentPlansController extends AbstractController
 {
@@ -32,7 +32,7 @@ final class PaymentPlansController extends AbstractController
     {
         return new JsonResponse(
             array_map(
-                function(PaymentPlan $paymentPlan) {
+                function(PaymentPlanReadModel $paymentPlan) {
                     return $paymentPlan->asArray();
                 },
                 $paymentPlans->list()

@@ -14,10 +14,6 @@ declare(strict_types=1);
 
 namespace Payman\Application;
 
-use Payman\Application\PaymentPlans\RemovePaymentPlan;
-use Payman\Application\PaymentPlans\RemovePaymentPlanHandler;
-use Payman\Application\PaymentPlans\UpdatePaymentPlan;
-use Payman\Application\PaymentPlans\UpdatePaymentPlanHandler;
 use Payman\Application\Payments\UploadPayment;
 use Payman\Application\Payments\UploadPaymentHandler;
 use Payman\Application\PaymentYears\AddPaymentYearToPlan;
@@ -32,10 +28,6 @@ use Payman\Application\Students\UnassignStudentFromPlanHandler;
 final class Application
 {
 
-    private UpdatePaymentPlanHandler $updatePaymentPlanHandler;
-
-    private RemovePaymentPlanHandler $removePaymentPlanHandler;
-
     private AddPaymentYearToPlanHandler $addPaymentYearToPlanHandler;
 
     private RemovePaymentYearHandler $removePaymentYearHandler;
@@ -47,8 +39,6 @@ final class Application
     private UploadPaymentHandler $uploadPaymentHandler;
 
     public function __construct(
-        UpdatePaymentPlanHandler $updatePaymentPlanHandler,
-        RemovePaymentPlanHandler $removePaymentPlanHandler,
         AddPaymentYearToPlanHandler $addPaymentYearToPlanHandler,
         RemovePaymentYearHandler $removePaymentYearHandler,
         AssignStudentToPlanHandler $assignStudentToPlanHandler,
@@ -56,23 +46,11 @@ final class Application
         UploadPaymentHandler $uploadPaymentHandler
 
     ) {
-        $this->updatePaymentPlanHandler = $updatePaymentPlanHandler;
-        $this->removePaymentPlanHandler = $removePaymentPlanHandler;
         $this->addPaymentYearToPlanHandler = $addPaymentYearToPlanHandler;
         $this->removePaymentYearHandler = $removePaymentYearHandler;
         $this->assignStudentToPlanHandler = $assignStudentToPlanHandler;
         $this->unassignStudentFromPlanHandler = $unassignStudentFromPlanHandler;
         $this->uploadPaymentHandler = $uploadPaymentHandler;
-    }
-
-    public function updatePaymentPlan(UpdatePaymentPlan $command): void
-    {
-        $this->updatePaymentPlanHandler->handle($command);
-    }
-
-    public function removePaymentPlan(RemovePaymentPlan $command): void
-    {
-        $this->removePaymentPlanHandler->handle($command);
     }
 
     public function addPaymentYearToPlan(AddPaymentYearToPlan $command): void

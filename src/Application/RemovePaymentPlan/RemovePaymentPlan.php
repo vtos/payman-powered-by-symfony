@@ -12,22 +12,19 @@
 
 declare(strict_types=1);
 
-namespace Payman\Application\PaymentPlans;
+namespace Payman\Application\RemovePaymentPlan;
 
-final class ListPaymentPlansQuery
+final class RemovePaymentPlan
 {
-    private PaymentPlans $paymentPlans;
+    private string $id;
 
-    public function __construct(PaymentPlans $paymentPlans)
+    public function __construct(string $id)
     {
-        $this->paymentPlans = $paymentPlans;
+        $this->id = $id;
     }
 
-    /**
-     * @return array See {@link PaymentPlans::list()}.
-     */
-    public function query(): array
+    public function id(): string
     {
-        return $this->paymentPlans->list();
+        return $this->id;
     }
 }

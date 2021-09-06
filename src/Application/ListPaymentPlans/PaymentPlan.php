@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Payman\Application\PaymentPlans;
+namespace Payman\Application\ListPaymentPlans;
 
 use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
