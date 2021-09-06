@@ -1,3 +1,5 @@
 services:
   Payman\Application\CreatePaymentPlan\CreatePaymentPlanService:
     public: true
+  Payman\Application\RemovePaymentPlan\RemovePaymentPlanService:
+    public: true

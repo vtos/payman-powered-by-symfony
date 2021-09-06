@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace Payman\Infrastructure\Web\Controller;
 
+use Payman\Application\RemovePaymentPlan\RemovePaymentPlan;
+use Payman\Application\RemovePaymentPlan\RemovePaymentPlanService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,5 +58,16 @@ final class PaymentPlansController extends AbstractController
         return new JsonResponse(
             $paymentPlan->asArray()
         );
+    }
+
+    /**
+     * @Route("/api/v1/plans/{id}", methods={"DELETE"}, name="api_remove_payment_plan")
+     */
+    public function remove(string $id, RemovePaymentPlanService $removePaymentPlanService): JsonResponse
+    {
+        $removePaymentPlanService->handle(
+            new RemovePaymentPlan($id)
+        );
+        return new JsonResponse();
     }
 }

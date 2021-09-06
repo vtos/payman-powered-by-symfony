@@ -17,8 +17,10 @@ namespace Tests\Adapter\Web\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Payman\Application\CreatePaymentPlan\CreatePaymentPlanService;
+use Payman\Application\RemovePaymentPlan\RemovePaymentPlanService;
 use Payman\Application\CreatePaymentPlan\CreatePaymentPlan;
-use Payman\Application\PaymentPlans\PaymentPlan as PaymentPlanReadModel;
+use Payman\Application\RemovePaymentPlan\RemovePaymentPlan;
+use Payman\Application\ListPaymentPlans\PaymentPlan as PaymentPlanReadModel;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanId;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanName;
 use Payman\Domain\Model\PaymentPlan\PaymentPlanType;
@@ -41,10 +43,10 @@ class PaymentPlansControllerTest extends KernelTestCase
      */
     public function it_calls_service_to_create_a_payment_plan(): void
     {
-        $createPlanService = $this->createMock(CreatePaymentPlanService::class);
-        self::$kernel->getContainer()->set(CreatePaymentPlanService::class, $createPlanService);
+        $createPaymentPlanService = $this->createMock(CreatePaymentPlanService::class);
+        self::$kernel->getContainer()->set(CreatePaymentPlanService::class, $createPaymentPlanService);
 
-        $createPlanService->expects($this->once())
+        $createPaymentPlanService->expects($this->once())
             ->method('handle')
             ->with(
                 new CreatePaymentPlan('Create Payment Plan Test', PaymentPlanType::LOCALS)
@@ -58,7 +60,7 @@ class PaymentPlansControllerTest extends KernelTestCase
                 )
             );
 
-        static::$kernel->handle(
+        self::$kernel->handle(
             Request::create(
                 '/api/v1/plans',
                 'POST',
@@ -66,6 +68,28 @@ class PaymentPlansControllerTest extends KernelTestCase
                     'name' => 'Create Payment Plan Test',
                     'type' => PaymentPlanType::LOCALS,
                 ]
+            )
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_calls_a_service_to_remove_a_payment_plan(): void
+    {
+        $removePaymentPlanService = $this->createMock(RemovePaymentPlanService::class);
+        self::$kernel->getContainer()->set(RemovePaymentPlanService::class, $removePaymentPlanService);
+
+        $removePaymentPlanService->expects($this->once())
+            ->method('handle')
+            ->with(
+                new RemovePaymentPlan('1')
+            );
+
+        self::$kernel->handle(
+            Request::create(
+                '/api/v1/plans/1',
+                'DELETE'
             )
         );
     }
